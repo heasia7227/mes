@@ -1,0 +1,47 @@
+# Go 编译产物
+*.exe
+*.out
+*.test
+*.prof
+*.o
+*.a
+main
+main.exe
+
+# Beego 运行日志、临时文件
+logs/
+tmp/
+upload/
+static/cache/
+go-cache/
+Process/
+
+# IDE 配置
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 环境配置、密钥 (按需, 如果你要提交模板conf可以删掉这行) 
+conf/app.conf
+conf/*.local
+.env
+.env.local
+
+# 数据库、缓存本地文件
+*.db
+*.sqlite
+*.sqlite3
+
+# go mod 缓存 (本地不用提交)
+/vendor/
+
+# air 热重载 (常用beego开发工具) 
+.air.toml
+tmp-air/
+
+# delve 调试文件
+__debug_bin
