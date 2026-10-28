@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 
-	_ "common/db" // 初始化数据库连接
+	_ "api-service/routers" // 初始化路由
+	_ "common/db"           // 初始化数据库连接
 	"common/utils/conf"
 
 	"github.com/beego/beego/v2/server/web"
