@@ -80,7 +80,7 @@ export default function UserPage() {
           required: true,
           placeholder: "新增必填，编辑时不修改可留空",
         },
-        { key: "post_code", label: "岗位编码" },
+        { key: "post_code", label: "工号" },
         {
           key: "sex",
           label: "性别",

@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	userService = &system.SystemUserService{}
+	userService = &system.UserService{}
 )
 
 func AuthGuard(ctx *context.Context) {

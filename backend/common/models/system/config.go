@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	ConfigId    int64     `json:"config_id" orm:"column(config_id);pk"`
+	ID          string    `json:"id" orm:"column(id);pk"`
 	ConfigName  string    `json:"config_name" orm:"column(config_name)"`
 	ConfigKey   string    `json:"config_key" orm:"column(config_key)"`
 	ConfigValue string    `json:"config_value" orm:"column(config_value)"`

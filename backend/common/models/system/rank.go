@@ -9,8 +9,8 @@ import (
 type Rank struct {
 	ID         string    `json:"id" orm:"column(id);pk"`
 	RankName   string    `json:"rank_name" orm:"column(rank_name)"`
-	RankStatus int       `json:"rank_status" orm:"column(rank_status)"`
-	SortNo     int       `json:"sort_no" orm:"column(sort_no)"`
+	Status     string    `json:"status" orm:"column(status)"`
+	Sort       int       `json:"sort" orm:"column(sort)"`
 	Remark     string    `json:"remark" orm:"column(remark)"`
 	CreateBy   string    `json:"create_by" orm:"column(create_by)"`
 	CreateTime time.Time `json:"create_time" orm:"column(create_time)"`

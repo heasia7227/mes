@@ -13,9 +13,9 @@ type Dept struct {
 	DeptCode     string    `json:"dept_code" orm:"column(dept_code)"`
 	DeptFullName string    `json:"dept_full_name" orm:"column(dept_full_name)"`
 	DeptType     string    `json:"dept_type" orm:"column(dept_type)"`
-	SortNo       int       `json:"sort_no" orm:"column(sort_no)"`
+	Sort         int       `json:"sort" orm:"column(sort)"`
 	Remark       string    `json:"remark" orm:"column(remark)"`
-	Status       int       `json:"status" orm:"column(status)"`
+	Status       string    `json:"status" orm:"column(status)"`
 	IDPath       string    `json:"id_path" orm:"column(id_path)"`
 	NamePath     string    `json:"name_path" orm:"column(name_path)"`
 	CreateBy     string    `json:"create_by" orm:"column(create_by)"`

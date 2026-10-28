@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	systemService "api-service/services/system"
+	"api-service/services/system"
 	"common/utils/strings"
 
 	"github.com/beego/beego/v2/server/web/context"
 )
 
-var logService = systemService.NewSystemLogService()
+var logService = system.LogService{}
 
 func RequestLogger(ctx *context.Context) {
 	// 记录开始时间
@@ -176,7 +176,7 @@ func RequestLogger(ctx *context.Context) {
 	// 		ip = "127.0.0.1"
 	// 	}
 
-	// 	logService.AppendLog(&system.Log{
+	// 	logService.CreateLog(&systemDto.LogDto{
 	// 		ID:            strings.GenerateID(),
 	// 		Ip:            ip,
 	// 		LogContent:    fmt.Sprintf("路径: %s, 方法: %s, 参数: %s", path, method, params),

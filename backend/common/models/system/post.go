@@ -10,8 +10,8 @@ type Post struct {
 	ID         string    `json:"id" orm:"column(id);pk"`
 	PostName   string    `json:"post_name" orm:"column(post_name)"`
 	PostCode   string    `json:"post_code" orm:"column(post_code)"`
-	PostStatus int       `json:"post_status" orm:"column(post_status)"`
-	SortNo     int       `json:"sort_no" orm:"column(sort_no)"`
+	Status     string    `json:"status" orm:"column(status)"`
+	Sort       int       `json:"sort" orm:"column(sort)"`
 	Remark     string    `json:"remark" orm:"column(remark)"`
 	CreateBy   string    `json:"create_by" orm:"column(create_by)"`
 	CreateTime time.Time `json:"create_time" orm:"column(create_time)"`
