@@ -19,7 +19,7 @@ type CustomClaims struct {
 // GenerateToken 生成token
 func GenerateToken(userId, userName, loginName string) (string, error) {
 	// 从配置文件中获取密钥和过期时间
-	secretKey := conf.GetStringConf("jwt.secret", "3d-auto-pro")
+	secretKey := conf.GetStringConf("jwt.secret", "mes-secret-key-token")
 	accessExpire := conf.GetIntConf("jwt.access_expire", 24)
 
 	now := time.Now()

@@ -23,7 +23,6 @@ func (s *LoginLogService) GetLoginLogList(params map[string]string) ([]systemDto
 				t1.id,
 				t1.login_name,
 				t1.login_ip,
-				t1.login_location,
 				t1.browser,
 				t1.os,
 				t1.login_status,
@@ -36,7 +35,7 @@ func (s *LoginLogService) GetLoginLogList(params map[string]string) ([]systemDto
 
 	// 添加搜索条件
 	if params["keyword"] != "" {
-		sql += ` AND CONCAT(t1.login_name, t1.login_ip, t1.login_location, t1.browser, t1.os) LIKE ? `
+		sql += ` AND CONCAT(t1.login_name, t1.login_ip, t1.browser, t1.os) LIKE ? `
 		args = append(args, "%"+params["keyword"]+"%")
 	}
 
@@ -71,7 +70,6 @@ func (s *LoginLogService) GetLoginLogDetail(id string) systemDto.LoginLogDto {
 				t1.id,
 				t1.login_name,
 				t1.login_ip,
-				t1.login_location,
 				t1.browser,
 				t1.os,
 				t1.login_status,
@@ -88,8 +86,8 @@ func (s *LoginLogService) GetLoginLogDetail(id string) systemDto.LoginLogDto {
 	return log
 }
 
-func (s *LoginLogService) CreateLoginLog(logDto systemDto.LoginLogDto) error {
-	log := logDto.LoginLog
+func (s *LoginLogService) CreateLoginLog(loginLogDto systemDto.LoginLogDto) error {
+	log := loginLogDto.LoginLog
 
 	now := time.Now()
 	log.LoginTime = now

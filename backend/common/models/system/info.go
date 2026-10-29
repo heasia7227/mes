@@ -12,7 +12,6 @@ type Info struct {
 	SystemLogo      string    `json:"system_logo" orm:"column(system_logo)"`
 	LoginBackground string    `json:"login_background" orm:"column(login_background)"`
 	FooterText      string    `json:"footer_text" orm:"column(footer_text)"`
-	IsEnabled       int       `json:"is_enabled" orm:"column(is_enabled)"`
 	CreateBy        string    `json:"create_by" orm:"column(create_by)"`
 	CreateTime      time.Time `json:"create_time" orm:"column(create_time)"`
 	UpdateBy        string    `json:"update_by" orm:"column(update_by)"`

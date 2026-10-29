@@ -3,8 +3,10 @@ package system
 import (
 	systemDto "api-service/dtos/system"
 	"common/models/system"
+	"common/utils/redis"
 	"common/utils/strings"
 	"common/utils/token"
+	"errors"
 	"fmt"
 	"time"
 
@@ -131,8 +133,16 @@ func (c *UserService) UpdateUser(userDto systemDto.UserDto) error {
 }
 
 func (s *UserService) GetUserByToken(tokenStr string) *system.User {
+	// 从redis中获取token
+	_token, _ := redis.Get("token:" + tokenStr)
+	if _token == "" {
+		return nil
+	}
+
+	// 解析token
 	claims, err := token.ParseToken(tokenStr)
 	if err != nil {
+		redis.Del("token:" + tokenStr)
 		return nil
 	}
 	return &system.User{
@@ -140,4 +150,39 @@ func (s *UserService) GetUserByToken(tokenStr string) *system.User {
 		UserName:  claims.UserName,
 		LoginName: claims.LoginName,
 	}
+}
+
+func (s *UserService) LoginUser(loginName string, password string) (*system.User, error) {
+	var user system.User
+
+	o := orm.NewOrm()
+	sql := `SELECT * FROM t_sys_user WHERE login_name = ? AND password = ?`
+	err := o.Raw(sql, loginName, strings.MD5Hash(password)).QueryRow(&user)
+	if err != nil {
+		return nil, errors.New("用户名或密码错误")
+	}
+
+	if user.Status == "disable" {
+		return nil, errors.New("该用户已被禁用")
+	}
+
+	// 检查用户是否有角色
+	sql = `
+			SELECT 
+				t2.* 
+			FROM t_sys_role_user t1
+			LEFT JOIN t_sys_role t2 ON t1.role_id = t2.id
+			WHERE t1.user_id = ?
+				AND t2.status = 'enable'
+			`
+	var roles []system.Role
+	_, err = o.Raw(sql, user.ID).QueryRows(&roles)
+	if err != nil {
+		return nil, errors.New("查询用户权限失败")
+	}
+	if len(roles) == 0 {
+		return nil, errors.New("该用户没有权限")
+	}
+
+	return &user, nil
 }

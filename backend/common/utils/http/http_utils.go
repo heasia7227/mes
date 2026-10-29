@@ -55,31 +55,6 @@ func ParseUserAgent(userAgent string) (browser, os string) {
 	return
 }
 
-// GetLoginLocation 根据IP地址获取登录地点 (这里使用简单的模拟实现, 实际项目中可以使用IP地理位置API)
-func GetLoginLocation(ip string) string {
-	// 这里使用简单的模拟实现, 实际项目中可以使用IP地理位置API
-	// 例如: https://ipstack.com/ 或 https://ipapi.co/
-
-	// 将IPv6本地回环地址转换为IPv4本地回环地址
-	if ip == "::1" {
-		return "127.0.0.1"
-	}
-
-	// 模拟IP地址对应的地理位置
-	ipLocationMap := map[string]string{
-		"127.0.0.1":      "127.0.0.1",
-		"192.168.1.1":    "局域网",
-		"192.168.110.70": "公司网络",
-	}
-
-	if location, ok := ipLocationMap[ip]; ok {
-		return location
-	}
-
-	// 对于其他IP地址, 返回IP地址本身
-	return ip
-}
-
 // IsInternalIP 判断是否为内网IP
 func IsInternalIP(ip string) bool {
 	// 内网IP范围:

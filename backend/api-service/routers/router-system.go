@@ -15,12 +15,10 @@ func RegisterRouter(rootpath string, c web.ControllerInterface, mappingMethods .
 }
 
 func init() {
-	// 	// Auth
-	// 	RegisterRouter("/auth/login", &system.AuthController{}, "post:Login")                 // 登录
-	// 	RegisterRouter("/auth/captcha", &system.AuthController{}, "get:Captcha")              // 获取验证码
-	// 	RegisterRouter("/auth/logout", &system.AuthController{}, "post:Logout")               // 退出登录
-	// 	RegisterRouter("/auth/validate-token", &system.AuthController{}, "get:ValidateToken") // 校验Token
-	// RegisterRouter("/auth/force-logout", &system.AuthController{}, "post:ForceLogout") // 强制退出登录
+	// Auth
+	RegisterRouter("/auth/login", &system.LoginController{}, "post:Login")    // 登录
+	RegisterRouter("/auth/captcha", &system.LoginController{}, "get:Captcha") // 获取验证码
+	RegisterRouter("/auth/logout", &system.LoginController{}, "post:Logout")  // 退出登录
 
 	// System - users
 	RegisterRouter("/system/user/list", &system.UserController{}, "get:GetUserList")
@@ -42,17 +40,15 @@ func init() {
 	RegisterRouter("/system/config/:id", &system.ConfigController{}, "get:GetConfigDetail;put:UpdateConfig;delete:DeleteConfig")
 	RegisterRouter("/system/config/refreshCache", &system.ConfigController{}, "put:RefreshCache")
 
-	// 	// System - logs
-	// 	RegisterRouter("/system/log/list", &system.LogController{}, "get:GetOperationLogList")
-	// 	RegisterRouter("/system/log/export", &system.LogController{}, "get:ExportOperationLogs")
-	// 	RegisterRouter("/system/log/stats", &system.LogController{}, "get:GetLogStats")
+	// System - logs
+	RegisterRouter("/system/log/list", &system.LogController{}, "get:GetOperationLogList")
 
-	// 	// System - info
-	// 	RegisterRouter("/system/info/list", &system.SystemInfoController{}, "get:GetSystemInfoList")
-	// 	RegisterRouter("/system/info", &system.SystemInfoController{}, "post:AddSystemInfo;put:UpdateSystemInfo")
-	// 	RegisterRouter("/system/info/:id", &system.SystemInfoController{}, "get:GetSystemInfo;delete:DeleteSystemInfo")
-	// 	RegisterRouter("/system/info/current", &system.SystemInfoController{}, "get:GetCurrentSystemInfo")
-	// 	RegisterRouter("/system/info/:id/enable", &system.SystemInfoController{}, "post:EnableSystemInfo")
+	// System - login logs
+	RegisterRouter("/system/login-log/list", &system.LoginLogController{}, "get:GetLoginLogList")
+
+	// System - info
+	RegisterRouter("/system/info", &system.InfoController{}, "get:GetSystemInfo")
+	RegisterRouter("/system/info/:id", &system.InfoController{}, "put:UpdateSystemInfo")
 
 	// System - menu
 	RegisterRouter("/system/menu/list", &system.MenuController{}, "get:GetMenuList")
@@ -77,11 +73,6 @@ func init() {
 	RegisterRouter("/system/dept", &system.DeptController{}, "post:CreateDept")
 	RegisterRouter("/system/dept/:id", &system.DeptController{}, "get:GetDeptDetail;put:UpdateDept;delete:DeleteDept")
 	RegisterRouter("/system/dept/:id/status", &system.DeptController{}, "put:UpdateDeptStatus")
-
-	// 	// System - login logs
-	// 	RegisterRouter("/system/login-log/list", &system.LoginLogController{}, "get:GetLoginLogList")
-	// 	RegisterRouter("/system/login-log/:id", &system.LoginLogController{}, "delete:DeleteLoginLog")
-	// 	RegisterRouter("/system/login-log/clear", &system.LoginLogController{}, "post:ClearLoginLogs")
 
 	// 	// System - role-menu
 	// 	RegisterRouter("/system/role-menu/list", &system.RoleRelationController{}, "get:GetRoleMenuList")
