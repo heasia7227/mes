@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	_ "api-service/routers" // 初始化路由
 	_ "common/db"           // 初始化数据库连接
@@ -30,14 +31,26 @@ func main() {
 	// 	middleware.AuthGuard(ctx)
 	// })
 
-	// Allow CORS for dev convenience
-	web.InsertFilter("/*", web.AfterExec, func(ctx *context.Context) {
-		ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
-		ctx.ResponseWriter.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-		ctx.ResponseWriter.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Token")
-		ctx.ResponseWriter.Header().Set("Access-Control-Allow-Credentials", "true")
+	// Allow CORS
+	// 注意: 必须注册在 BeforeRouter 阶段。OPTIONS 预检请求不会匹配到具体 Controller,
+	// 挂在 AfterExec 时预检请求根本拿不到响应头, 浏览器会以 CORS 错误拦截后续的真实请求。
+	web.InsertFilter("/*", web.BeforeRouter, func(ctx *context.Context) {
+		origin := ctx.Input.Header("Origin")
+		if origin == "" {
+			origin = "*"
+		}
+
+		header := ctx.ResponseWriter.Header()
+		header.Set("Access-Control-Allow-Origin", origin)
+		header.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS")
+		header.Set("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Token")
+		header.Set("Access-Control-Allow-Credentials", "true")
+		header.Set("Access-Control-Max-Age", "86400")
+		header.Set("Vary", "Origin")
+
+		// 预检请求直接响应 200 并结束: 写入响应头后 Started 被置位, 后续路由不再执行
 		if ctx.Input.Method() == "OPTIONS" {
-			ctx.ResponseWriter.WriteHeader(200)
+			ctx.ResponseWriter.WriteHeader(http.StatusOK)
 		}
 	})
 

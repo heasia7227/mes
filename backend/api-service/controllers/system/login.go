@@ -166,6 +166,8 @@ func (c *LoginController) Logout() {
 
 	user := userService.GetUserByToken(tokenStr)
 	if user != nil {
+		redis.Del("token:" + user.ID)
+
 		// 获取IP地址并将IPv6本地回环地址转换为IPv4本地回环地址
 		loginIP := c.Ctx.Input.IP()
 		if loginIP == "::1" {
@@ -189,6 +191,5 @@ func (c *LoginController) Logout() {
 			},
 		})
 	}
-	redis.Del("token:" + user.ID)
 	c.JSONObject(map[string]interface{}{"code": 200, "msg": "退出成功"})
 }

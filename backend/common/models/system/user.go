@@ -8,6 +8,9 @@ import (
 
 type User struct {
 	ID           string    `json:"id" orm:"column(id);pk"`
+	DeptID       string    `json:"dept_id" orm:"column(dept_id)"`
+	PostID       string    `json:"post_id" orm:"column(post_id)"`
+	RankID       string    `json:"rank_id" orm:"column(rank_id)"`
 	UserName     string    `json:"user_name" orm:"column(user_name)"`
 	LoginName    string    `json:"login_name" orm:"column(login_name)"`
 	Password     string    `json:"password" orm:"column(password)"`

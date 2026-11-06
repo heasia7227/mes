@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	taskLogPath := conf.GetStringConf("logs.task_file_path", "logs/")
+	taskLogPath := conf.GetStringConf("logs.path", "logs/")
 	logFilePath := filepath.Join(taskLogPath, "db", "db.log")
 	logWriter := wlogs.NewOrmFileWriter(logFilePath, 5)
 	// 替换ORM内部日志输出对象

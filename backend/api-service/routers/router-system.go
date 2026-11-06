@@ -27,6 +27,7 @@ func init() {
 	RegisterRouter("/system/user/:id/change-password", &system.UserController{}, "post:ChangePassword")
 	RegisterRouter("/system/user/:id/reset-password", &system.UserController{}, "put:ResetPassword")
 	RegisterRouter("/system/user/:id/status", &system.UserController{}, "put:UpdateUserStatus")
+	RegisterRouter("/system/user/:id/offline", &system.UserController{}, "put:UserOffline")
 
 	// System - roles
 	RegisterRouter("/system/role/list", &system.RoleController{}, "get:GetRoleList")
@@ -35,13 +36,13 @@ func init() {
 	RegisterRouter("/system/role/:id/status", &system.RoleController{}, "put:UpdateRoleStatus")
 
 	// System - config
-	RegisterRouter("/system/config/list", &system.ConfigController{}, "get:GetSystemConfig")
+	RegisterRouter("/system/config/list", &system.ConfigController{}, "get:GetConfigList")
 	RegisterRouter("/system/config", &system.ConfigController{}, "post:CreateConfig")
 	RegisterRouter("/system/config/:id", &system.ConfigController{}, "get:GetConfigDetail;put:UpdateConfig;delete:DeleteConfig")
-	RegisterRouter("/system/config/refreshCache", &system.ConfigController{}, "put:RefreshCache")
+	// RegisterRouter("/system/config/refreshCache", &system.ConfigController{}, "put:RefreshCache")
 
 	// System - logs
-	RegisterRouter("/system/log/list", &system.LogController{}, "get:GetOperationLogList")
+	RegisterRouter("/system/log/list", &system.LogController{}, "get:GetLogList")
 
 	// System - login logs
 	RegisterRouter("/system/login-log/list", &system.LoginLogController{}, "get:GetLoginLogList")

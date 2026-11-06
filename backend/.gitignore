@@ -1,0 +1,7 @@
+# Beego 运行日志、临时文件
+logs/
+tmp/
+upload/
+static/cache/
+go-cache/
+Process/

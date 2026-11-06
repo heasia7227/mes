@@ -4,6 +4,7 @@ import (
 	"api-service/controllers"
 	systemDto "api-service/dtos/system"
 	"api-service/services/system"
+	"common/utils/redis"
 	"common/utils/strings"
 )
 
@@ -157,8 +158,14 @@ func (c *UserController) UpdateUserStatus() {
 		return
 	}
 
-	// 状态
-	status := c.Ctx.Input.Param(":status")
+	// 状态校验
+	var changeStatus systemDto.UserChangeStatusDto
+	if err = c.BindJSON(&changeStatus); err != nil {
+		c.JSONErr(400, err.Error())
+		return
+	}
+
+	status := changeStatus.Status
 	if status == "" {
 		c.JSONErr(400, "状态不能为空")
 		return
@@ -243,7 +250,7 @@ func (c *UserController) ResetPassword() {
 
 	login_name := c.Ctx.Input.Header("login_name")
 	existingUser.UpdateBy = login_name
-	existingUser.Password = "123456"
+	existingUser.Password = strings.MD5Hash(strings.MD5Hash("123456"))
 
 	// 更新到数据库
 	err = userService.UpdateUser(existingUser)
@@ -251,6 +258,24 @@ func (c *UserController) ResetPassword() {
 		c.JSONErr(500, "重置用户密码失败: "+err.Error())
 		return
 	}
+
+	c.JSONObject(map[string]interface{}{
+		"success": true,
+	})
+}
+
+// UserOffline 用户下线
+func (c *UserController) UserOffline() {
+	id := c.Ctx.Input.Param(":id")
+
+	// 检查用户是否存在
+	_, err := userService.GetUserDetail(id)
+	if err != nil {
+		c.JSONErr(404, "用户不存在")
+		return
+	}
+
+	redis.Del("token:" + id)
 
 	c.JSONObject(map[string]interface{}{
 		"success": true,

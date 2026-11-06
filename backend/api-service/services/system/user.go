@@ -25,6 +25,12 @@ func (c *UserService) GetUserList(params map[string]string) ([]systemDto.UserDto
 	// 构建 SQL 查询
 	sql := `SELECT
 				t1.id,
+				t1.dept_id,
+				t1.post_id,
+				t1.rank_id,
+				t2.dept_name,
+				t3.post_name,
+				t4.rank_name,
 				t1.user_name,
 				t1.login_name,
 				t1.password,
@@ -40,6 +46,9 @@ func (c *UserService) GetUserList(params map[string]string) ([]systemDto.UserDto
 				t1.update_by,
 				DATE_FORMAT(t1.update_time, '%Y-%m-%d %H:%i:%s') as update_time
 			FROM t_sys_user t1
+			LEFT JOIN t_sys_dept t2 ON t1.dept_id = t2.id
+			LEFT JOIN t_sys_post t3 ON t1.post_id = t3.id
+			LEFT JOIN t_sys_rank t4 ON t1.rank_id = t4.id
 			WHERE 1=1 `
 
 	var args []interface{}
@@ -48,6 +57,18 @@ func (c *UserService) GetUserList(params map[string]string) ([]systemDto.UserDto
 	if params["keyword"] != "" {
 		sql += ` AND CONCAT(t1.user_name, t1.login_name, t1.phone, t1.email) LIKE ? `
 		args = append(args, "%"+params["keyword"]+"%")
+	}
+	if params["dept_id"] != "" {
+		sql += ` AND t1.dept_id = ?`
+		args = append(args, params["dept_id"])
+	}
+	if params["post_id"] != "" {
+		sql += ` AND t1.post_id = ?`
+		args = append(args, params["post_id"])
+	}
+	if params["rank_id"] != "" {
+		sql += ` AND t1.rank_id = ?`
+		args = append(args, params["rank_id"])
 	}
 
 	if params["status"] != "" {
@@ -81,6 +102,12 @@ func (c *UserService) GetUserDetail(id string) (systemDto.UserDto, error) {
 	// 构建 SQL 查询
 	sql := `SELECT
 				t1.id,
+				t1.dept_id,
+				t1.post_id,
+				t1.rank_id,
+				t2.dept_name,
+				t3.post_name,
+				t4.rank_name,
 				t1.user_name,
 				t1.login_name,
 				t1.password,
@@ -96,6 +123,9 @@ func (c *UserService) GetUserDetail(id string) (systemDto.UserDto, error) {
 				t1.update_by,
 				DATE_FORMAT(t1.update_time, '%Y-%m-%d %H:%i:%s') as update_time
 			FROM t_sys_user t1
+			LEFT JOIN t_sys_dept t2 ON t1.dept_id = t2.id
+			LEFT JOIN t_sys_post t3 ON t1.post_id = t3.id
+			LEFT JOIN t_sys_rank t4 ON t1.rank_id = t4.id
 			WHERE t1.id = ? `
 
 	err := o.Raw(sql, id).QueryRow(&user)
@@ -133,18 +163,18 @@ func (c *UserService) UpdateUser(userDto systemDto.UserDto) error {
 }
 
 func (s *UserService) GetUserByToken(tokenStr string) *system.User {
+	// 解析token
+	claims, err := token.ParseToken(tokenStr)
+	if err != nil {
+		return nil
+	}
+
 	// 从redis中获取token
-	_token, _ := redis.Get("token:" + tokenStr)
+	_token, _ := redis.Get("token:" + claims.UserId)
 	if _token == "" {
 		return nil
 	}
 
-	// 解析token
-	claims, err := token.ParseToken(tokenStr)
-	if err != nil {
-		redis.Del("token:" + tokenStr)
-		return nil
-	}
 	return &system.User{
 		ID:        claims.UserId,
 		UserName:  claims.UserName,
